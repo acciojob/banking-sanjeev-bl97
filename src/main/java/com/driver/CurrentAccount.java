@@ -1,9 +1,6 @@
 package com.driver;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 public class CurrentAccount extends BankAccount{
    private  String tradeLicenseId; //consists of Uppercase English characters only
@@ -99,7 +96,7 @@ public class CurrentAccount extends BankAccount{
             {
                 sb.append(newId[idx]);
             }
-            //strore the licenseId
+            //store the licenseId
             this.tradeLicenseId=sb.toString();
         }
     }
