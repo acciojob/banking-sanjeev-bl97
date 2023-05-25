@@ -40,56 +40,68 @@ public class CurrentAccount extends BankAccount{
         // If the characters of the license Id can be rearranged to create any valid license Id
         // If it is not possible, throw "Valid License can not be generated" Exception
 
-        String lic = this.tradeLicenseId;
-        int n = this.tradeLicenseId.length();
-        int target = n / 2;
-        if(n % 2 != 0)
-            target++;
-        boolean valid = true;
-
-        for(int i = 1; i < n; i++){
-            if(lic.charAt(i -1) == lic.charAt(i) ){
-                valid = false;
-                break;
-            }
-
+        String s=this.tradeLicenseId;
+        int n=s.length();
+        boolean valid=true;
+        for(int i=0;i<n-1;i++)
+        {
+            if(s.charAt(i)==s.charAt(i+1)) valid=false;
         }
-        if(valid)
-            return;
-
-        LinkedHashMap<Character,Integer> freq = new LinkedHashMap<>();
-        char[] ans = new char[n];
-
-        for(int i = 0; i < n; i++){
-            char curr = lic.charAt(i);
-            freq.put(curr,freq.getOrDefault(curr,0) + 1);
-        }
-
-       freq = freq.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
-
-        for(Map.Entry<Character,Integer> m : freq.entrySet()){
-            char ch = m.getKey();
-            int val = m.getValue();
-            if(val > target){
-                throw new RuntimeException("Valid License can not be generated");
+        if(valid!=true)
+        {
+            //we take one freq arr and store frequencies
+            int freq[]=new int[26];
+            for(int i=0;i<n;i++)
+            {
+                freq[s.charAt(i)-'A']++;
             }
-
-            for(int i = 0; i < n; i += 2){
-                if( (int)ans[i] == 0 && val != 0){
-                ans[i] = ch;
-                val--;
+            //search for the maximum frequency
+            int max=Integer.MIN_VALUE;
+            int maxchar=-1;
+            for(int i=0;i<26;i++)
+            {
+                if(freq[i]>max) {
+                    max = Math.max(max, freq[i]);
+                    maxchar=i;
                 }
             }
-
+            //if max is greater than
+            if(n%2!=0&& (n/2)+1<max)
+                throw new Exception("Valid License can not be generated");
+            if(n%2==0 && (n/2)<max)
+                throw new Exception("Valid License can not be generated");
+            //forming the valid by initially filling the odd positions first
+            int i=0;
+            char[] newId=new char[n];
+            while(i<n) {
+                if (freq[maxchar] > 0) {
+                    newId[i] = (char) (maxchar + 'A');
+                    freq[maxchar]--;
+                    i = i + 2;
+                    if (i >= n) i = 1;
+                }
+                else {
+                    break;
+                }
+            }
+            //now fill remaining positions
+            for(int j=0;j<26;j++)
+            {
+                while(freq[j] > 0) {
+                    newId[i] = (char) (j + 'A');
+                    freq[j]--;
+                    i = i + 2;
+                    if (i >= n) i = 1;
+                }
+            }
+            //form the string from char array
+            StringBuilder sb=new StringBuilder();
+            for(int idx=0;idx<n;idx++)
+            {
+                sb.append(newId[idx]);
+            }
+            //strore the licenseId
+            this.tradeLicenseId=sb.toString();
         }
-        this.tradeLicenseId = ans.toString();
-
-
-
     }
-
 }
