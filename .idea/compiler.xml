@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="vehicles-solution" />
+        <module name="banking-sanjeev-bl97" />
         <module name="banking-solution" />
         <module name="java-assignment-testing-solution" />
         <module name="banking" />
